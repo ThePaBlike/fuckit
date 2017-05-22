@@ -7,6 +7,7 @@ void drawSurface();
 
 // Поверхность
 Surface<double> * surface;
+
 float xy_aspect;
 int   last_x, last_y;
 float rotationX = 0.0, rotationY = 0.0;
@@ -157,9 +158,17 @@ void myGlutDisplay(void)
 
 void drawSurface()
 {
-	glBegin(GL_TRIANGLES);
+	glBegin(GL_LINES);
 	{
-
+		glColor3f(0.5f, 0.5f, 0.5f);
+		for (int i = 0; i < surface->GetIndexLength(); i++)
+		{
+			int in = surface->GetIndexes().at(i);
+			if (in >= surface->GetVertexes().capacity())
+				break;
+			Vertex<double> t = surface->GetVertexes().at(in);
+			glVertex3d(t.x, t.y, t.z);
+		}
 	}
 	glEnd();
 }
@@ -167,7 +176,7 @@ void drawSurface()
 int main(int argc, char* argv[])
 {
 	// Создаём элипсоид
-	surface = new Ellipsoid<double>(10, 10, 10, 10, 10, Interval<double>(0, 2 * PI), Interval<double>(0, 2 * PI));
+	surface = new Ellipsoid<double>(10.0, 10.0, 15.0, 15, 15, Interval<double>(0, 2*PI), Interval<double>(-25, 5));
 
 
 	/****************************************/
