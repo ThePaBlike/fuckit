@@ -111,6 +111,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ellipsoid.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="surface.cpp" />
   </ItemGroup>
@@ -118,8 +119,10 @@
     <Library Include="glui32.lib" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ellipsoid.h" />
     <ClInclude Include="glui.h" />
     <ClInclude Include="surface.h" />
+    <ClInclude Include="toInclude.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

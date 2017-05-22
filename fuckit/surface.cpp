@@ -27,10 +27,13 @@ Surface<T>::Surface(T a, T b, T c, int density_u, int density_v, Interval<T> int
 	// Выделяем память под индексы
 	_indexes_length = (_density_u + 2) * (_density_v + 1) * 6;
 	_indexes = new int[_indexes_length];
+
+	computeVertexes();
+	computeIndexes();
 }
 
 template<typename T>
-Surface<T>::~Surface()
+virtual Surface<T>::~Surface()
 {
 	delete[] _indexes;
 }

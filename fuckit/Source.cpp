@@ -1,9 +1,12 @@
 #include <string.h>
 #include "glui.h"
+#include "toInclude.h"
 
 //Прототипы
 void drawSurface();
 
+// Поверхность
+Surface<double> * surface;
 float xy_aspect;
 int   last_x, last_y;
 float rotationX = 0.0, rotationY = 0.0;
@@ -154,11 +157,19 @@ void myGlutDisplay(void)
 
 void drawSurface()
 {
+	glBegin(GL_TRIANGLES);
+	{
 
+	}
+	glEnd();
 }
 
 int main(int argc, char* argv[])
 {
+	// Создаём элипсоид
+	surface = new Ellipsoid<double>(10, 10, 10, 10, 10, Interval<double>(0, 2 * PI), Interval<double>(0, 2 * PI));
+
+
 	/****************************************/
 	/*   Initialize GLUT and create window  */
 	/****************************************/

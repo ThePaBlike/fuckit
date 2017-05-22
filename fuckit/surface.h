@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-
+#define PI 3.141592
 template <typename T>
 struct Interval
 {
@@ -39,7 +39,7 @@ class Surface
 public:
 	Surface();
 	Surface(T a, T b, T c, int density_u, int density_v, Interval<T> interval_u, Interval<T> interval_v);
-	~Surface();
+	virtual ~Surface();
 	std::vector<Vertex<T>> GetVertexes();
 	int* GetIndexes();
 protected:
