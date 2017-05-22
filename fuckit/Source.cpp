@@ -1,6 +1,9 @@
 #include <string.h>
 #include "glui.h"
 
+//Прототипы
+void drawSurface();
+
 float xy_aspect;
 int   last_x, last_y;
 float rotationX = 0.0, rotationY = 0.0;
@@ -127,28 +130,7 @@ void myGlutDisplay(void)
 	glRotatef(rotationY, 0.0, 1.0, 0.0);
 	glRotatef(rotationX, 1.0, 0.0, 0.0);
 
-	/*** Now we render object, using the variables 'obj', 'segments', and
-	'wireframe'.  These are _live_ variables, which are transparently
-	updated by GLUI ***/
-
-	if (obj == 0) {
-		if (wireframe)
-			glutWireSphere(.6, segments, segments);
-		else
-			glutSolidSphere(.6, segments, segments);
-	}
-	else if (obj == 1) {
-		if (wireframe)
-			glutWireTorus(.2, .5, 16, segments);
-		else
-			glutSolidTorus(.2, .5, 16, segments);
-	}
-	else if (obj == 2) {
-		if (wireframe)
-			glutWireTeapot(.5);
-		else
-			glutSolidTeapot(.5);
-	}
+	drawSurface();
 
 	glDisable(GL_LIGHTING);  /* Disable lighting while we render text */
 	glMatrixMode(GL_PROJECTION);
@@ -170,6 +152,11 @@ void myGlutDisplay(void)
 	glutSwapBuffers();
 }
 
+void drawSurface()
+{
+
+}
+
 int main(int argc, char* argv[])
 {
 	/****************************************/
@@ -179,7 +166,7 @@ int main(int argc, char* argv[])
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
 	glutInitWindowPosition(50, 50);
-	glutInitWindowSize(300, 300);
+	glutInitWindowSize(800, 600);
 
 	main_window = glutCreateWindow("GLUI Example 2");
 	glutDisplayFunc(myGlutDisplay);
@@ -212,7 +199,7 @@ int main(int argc, char* argv[])
 	/*         Here's the GLUI code         */
 	/****************************************/
 
-	GLUI *glui = GLUI_Master.create_glui("GLUI", 0, 400, 50); /* name, flags,
+	GLUI *glui = GLUI_Master.create_glui("GLUI", 0, 850, 50); /* name, flags,
 															  x, and y */
 	new GLUI_StaticText(glui, "GLUI Example 2");
 	new GLUI_Separator(glui);
