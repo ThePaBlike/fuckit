@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #define PI 3.141592
+
 template <typename T>
 struct Interval
 {
@@ -28,6 +29,14 @@ struct Interval
 template <typename T>
 struct Vertex
 {
+	Vertex() {}
+	Vertex(T _x, T _y, T _z)
+	{
+		x = _x;
+		y = _y;
+		z = _z;
+	}
+
 	T x;
 	T y;
 	T z;
@@ -39,9 +48,10 @@ class Surface
 public:
 	Surface();
 	Surface(T a, T b, T c, int density_u, int density_v, Interval<T> interval_u, Interval<T> interval_v);
-	virtual ~Surface();
+	~Surface();
 	std::vector<Vertex<T>> GetVertexes();
 	int* GetIndexes();
+	virtual inline Vertex<T> getVertex(T u, T v) = 0;
 protected:
 	// Указатель на указатели, которые содержат x, y, z координаты каждой вершины
 	std::vector<Vertex<T>> _vertexes;
@@ -60,10 +70,11 @@ protected:
 	Interval<T> _interval_u;
 	Interval<T> _interval_v;
 
-	virtual inline Vertex<T> getVertex(T u, T v) = 0;
+	
 private:
-	// Метод для получения координат вершин 
+	// Метод для рассчёта всех вершин 
 	void computeVertexes();	
+	// Метод для рассчёта всех индексов
 	void computeIndexes();
 
 };
