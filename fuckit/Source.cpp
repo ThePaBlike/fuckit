@@ -6,7 +6,7 @@
 void drawSurface();
 
 // Поверхность
-Surface<double> * surface;
+Surface * surface;
 
 float xy_aspect;
 int   last_x, last_y;
@@ -166,7 +166,7 @@ void drawSurface()
 			int in = surface->GetIndexes().at(i);
 			if (in >= surface->GetVertexes().capacity())
 				break;
-			Vertex<double> t = surface->GetVertexes().at(in);
+			Vertex t = surface->GetVertexes().at(in);
 			glVertex3d(t.x, t.y, t.z);
 		}
 	}
@@ -176,7 +176,7 @@ void drawSurface()
 int main(int argc, char* argv[])
 {
 	// Создаём элипсоид
-	surface = new Ellipsoid<double>(10.0, 10.0, 15.0, 15, 15, Interval<double>(0, 2*PI), Interval<double>(-25, 5));
+	surface = new Ellipsoid(1.0, 1.0, 1.0, 15, 15, Interval(0, 2*PI), Interval(0, 2*PI));
 
 
 	/****************************************/

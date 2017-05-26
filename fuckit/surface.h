@@ -2,16 +2,15 @@
 #include <vector>
 #define PI 3.141592
 
-template <typename T>
 struct Interval
 {
 	// Поля
-	T start;
-	T end;
+	float start;
+	float end;
 
 	// Конструкторы
 	Interval() {}
-	Interval(T _st, T _en)
+	Interval(float _st, float _en)
 	{
 		start = _st;
 		end = _en;
@@ -26,162 +25,69 @@ struct Interval
 	}
 };
 
-template <typename T>
 struct Vertex
 {
 	Vertex() {}
-	Vertex(T _x, T _y, T _z)
+	Vertex(float _x, float _y, float _z)
 	{
 		x = _x;
 		y = _y;
 		z = _z;
 	}
 
-	T x;
-	T y;
-	T z;
+	float x;
+	float y;
+	float z;
 
 	// Оператор присваивания
 	Vertex& Vertex::operator=(Vertex i)
 	{
-		start = i.start;
-		end = i.end;
+		x = i.x;
+		y = i.y;
+		z = i.z;
 		return *this;
 	}
 };
 
-template <typename T>
+
 class Surface
 {
 public:
-	template<typename T>
-	Surface()
-	{
-	}
+	Surface();
+	Surface(float a, float b, float c, int density_u, int density_v, Interval interval_u, Interval interval_v);
+	virtual ~Surface();
 
-	template<typename T>
-	Surface(T a, T b, T c, int density_u, int density_v, Interval<T> interval_u, Interval<T> interval_v)
-	{
-		// Присваиваем аргументы конструктора локальным переменным
-		_a = a;
-		_b = b;
-		_c = c;
-		_density_u = density_u;
-		_density_v = density_v;
-		_interval_u = interval_u;
-		_interval_v = interval_v;
-
-		//TODO разобраться с выделением памяти
-		// Вычисляем шаг для каждой новой вершины
-		_step_u = (_interval_u.end - _interval_u.start) / _density_u;
-		_step_v = (_interval_v.end - _interval_v.start) / _density_v;
-		// Выделяем память под координаты вершин
-		_vertexes_length = (_density_u + 1) * (_density_v + 1);
-		_vertexes.reserve(_vertexes_length);
-		// Выделяем память под индексы
-		_indexes_length = (_density_u + 2) * (_density_v + 1) * 6;
-		_indexes.reserve(_indexes_length);
-
-		computeVertexes();
-		computeIndexes();
-	}
-
-	virtual ~Surface()
-	{
-	}
-	std::vector<Vertex<T>> GetVertexes();
+	std::vector<Vertex> GetVertexes();
 	std::vector<int> GetIndexes();
 	
 	int GetVertexLength();
-
 	int GetIndexLength();
+
 protected:
-	// Указатель на указатели, которые содержат x, y, z координаты каждой вершины
-	std::vector<Vertex<T>> _vertexes;
+	std::vector<Vertex> _vertexes;
 	int _vertexes_length;
-	// Указатель на массив индексов, содержащий порядок рисования вершин
 	std::vector<int> _indexes;
 	int _indexes_length;
 	// Параметры поверхности
-	T _a, _b, _c;
+	float _a, _b, _c;
 	// Плотность сегментов
 	int _density_u, _density_v;
 	// Шаг 
-	T _step_u;
-	T _step_v;
+	float _step_u;
+	float _step_v;
 	// Интервал
-	Interval<T> _interval_u;
-	Interval<T> _interval_v;
+	Interval _interval_u;
+	Interval _interval_v;
 
-	virtual inline Vertex<T> getVertex(T u, T v) = 0;
-private:
+	virtual inline Vertex getVertex(float u, float v) = 0;
 	// Метод для рассчёта всех вершин 
-	void computeVertexes();	
+	void computeVertexes();
 	// Метод для рассчёта всех индексов
 	void computeIndexes();
-
+private:
 	
-
 };
 
 
 
-template<typename T>
-std::vector<Vertex<T>> Surface<T>::GetVertexes()
-{
-	return _vertexes;
-}
-
-template<typename T>
-std::vector<int> Surface<T>::GetIndexes()
-{
-	return _indexes;
-}
-
-template<typename T>
-void Surface<T>::computeVertexes()
-{
-	for (T u = _interval_u.start; u <= _interval_u.end; u += _step_u)
-		for (T v = _interval_v.start; v <= _interval_v.end; v += _step_v)
-			_vertexes.push_back(getVertexe(u, v));
-}
-template<typename T>
-Vertex<double> getVertexe(T u, T v)
-{
-	return Vertex<T>(
-		v,
-		cos(u),
-		sin(u));
-}
-template<typename T>
-void Surface<T>::computeIndexes()
-{
-	// TODO написать код для индексации
-	int ind;
-	for (int j = 0; j < (_density_u + 1) * (_density_v + 1); j += _density_v + 1)
-	{
-		for (int l = 0; l < _density_v; l++)
-		{
-			ind = j + l;
-			_indexes.push_back(ind);
-			_indexes.push_back(ind + _density_v);
-			_indexes.push_back(ind + 1);
-			_indexes.push_back(ind + 1);
-			_indexes.push_back(ind + _density_v);
-			_indexes.push_back(ind + _density_v + 1);
-		}
-	}
-}
-
-template<typename T>
-int Surface<T>::GetVertexLength()
-{
-	return _vertexes_length;
-}
-
-template<typename T>
-int Surface<T>::GetIndexLength()
-{
-	return _indexes_length;
-}
 
