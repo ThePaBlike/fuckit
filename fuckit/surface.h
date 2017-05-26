@@ -64,12 +64,20 @@ public:
 	int GetIndexLength();
 
 protected:
+	// Параметры поверхности
+	float _a, _b, _c;
+	// Метод для рассчёта всех вершин 
+	void computeVertexes();
+	// Метод для рассчёта всех индексов
+	void computeIndexes();
+	// Метод для вычисления каждой вершины по заданной формуле
+	virtual inline Vertex getVertex(float u, float v) = 0;
+private:
 	std::vector<Vertex> _vertexes;
 	int _vertexes_length;
 	std::vector<int> _indexes;
 	int _indexes_length;
-	// Параметры поверхности
-	float _a, _b, _c;
+
 	// Плотность сегментов
 	int _density_u, _density_v;
 	// Шаг 
@@ -78,14 +86,6 @@ protected:
 	// Интервал
 	Interval _interval_u;
 	Interval _interval_v;
-
-	virtual inline Vertex getVertex(float u, float v) = 0;
-	// Метод для рассчёта всех вершин 
-	void computeVertexes();
-	// Метод для рассчёта всех индексов
-	void computeIndexes();
-private:
-	
 };
 
 
