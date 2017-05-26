@@ -158,7 +158,7 @@ void myGlutDisplay(void)
 
 void drawSurface()
 {
-	glBegin(GL_LINES);
+	glBegin(GL_QUADS);
 	{
 		glColor3f(0.5f, 0.5f, 0.5f);
 		for (int i = 0; i < surface->GetIndexLength(); i++)
@@ -176,7 +176,7 @@ void drawSurface()
 int main(int argc, char* argv[])
 {
 	// Создаём элипсоид
-	surface = new Ellipsoid(1.0, 1.0, 1.0, 15, 15, Interval(0, 2*PI), Interval(0, 2*PI));
+	surface = new Ellipsoid(1.0, 1.0, 1.0, 25, 25, Interval(0, 2*PI), Interval(0, 2*PI));
 
 
 	/****************************************/

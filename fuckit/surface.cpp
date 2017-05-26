@@ -21,7 +21,7 @@ Surface::Surface(float a, float b, float c, int density_u, int density_v, Interv
 	_vertexes_length = (_density_u + 1) * (_density_v + 1);
 	_vertexes.reserve(_vertexes_length);
 	// Выделяем память под индексы
-	_indexes_length = (_density_u + 2) * (_density_v + 1) * 6;
+	_indexes_length = (_density_u + 1) * (_density_v + 1) * 4;
 	_indexes.reserve(_indexes_length);
 }
 
@@ -57,10 +57,8 @@ void Surface::computeIndexes()
 			ind = j + l;
 			_indexes.push_back(ind);
 			_indexes.push_back(ind + _density_v);
-			_indexes.push_back(ind + 1);
-			_indexes.push_back(ind + 1);
-			_indexes.push_back(ind + _density_v);
 			_indexes.push_back(ind + _density_v + 1);
+			_indexes.push_back(ind + 1);
 		}
 	}
 }
