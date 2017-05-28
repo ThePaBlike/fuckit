@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#define PI 3.141592
+#define PI 3.141592653589793f
 
 struct Interval
 {

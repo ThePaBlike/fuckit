@@ -158,25 +158,32 @@ void myGlutDisplay(void)
 
 void drawSurface()
 {
-	glBegin(GL_QUADS);
+	//// TODO отладка
+	int ln = surface->GetVertexLength();
+	int fln = surface->GetVertexes().capacity();
+	int iln = surface->GetIndexLength();
+	int ifln = surface->GetIndexes().capacity();
+
+	for (int i = 0; i < surface->GetIndexLength(); i+=4)
 	{
-		glColor3f(0.5f, 0.5f, 0.5f);
-		for (int i = 0; i < surface->GetIndexLength(); i++)
+		glBegin(GL_LINE_LOOP);
 		{
-			int in = surface->GetIndexes().at(i);
-			if (in >= surface->GetVertexes().capacity())
-				break;
-			Vertex t = surface->GetVertexes().at(in);
-			glVertex3d(t.x, t.y, t.z);
+			glColor3f(0.5f, 0.5f, 0.5f);
+			for (int j = 0; j < 4; j++)
+			{
+				int in = surface->GetIndexes().at(i+j);
+				Vertex t = surface->GetVertexes().at(in);
+				glVertex3f(t.x, t.y, t.z);
+			}
 		}
+		glEnd();
 	}
-	glEnd();
 }
 
 int main(int argc, char* argv[])
 {
 	// Создаём элипсоид
-	surface = new Ellipsoid(1.0, 1.0, 1.0, 25, 25, Interval(0, 2*PI), Interval(0, 2*PI));
+	surface = new Thor(0.5, 0.5, 0.5, 14, 14, Interval(-PI, PI), Interval(0, 2 * PI));
 
 
 	/****************************************/
