@@ -114,8 +114,10 @@
     <ClCompile Include="cone.cpp" />
     <ClCompile Include="cylinder.cpp" />
     <ClCompile Include="ellipsoid.cpp" />
+    <ClCompile Include="rotation_test.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="surface.cpp" />
+    <ClCompile Include="test.cpp" />
     <ClCompile Include="thor.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -126,6 +128,7 @@
     <ClInclude Include="cylinder.h" />
     <ClInclude Include="ellipsoid.h" />
     <ClInclude Include="glui.h" />
+    <ClInclude Include="math_3d.h" />
     <ClInclude Include="surface.h" />
     <ClInclude Include="thor.h" />
     <ClInclude Include="toInclude.h" />
