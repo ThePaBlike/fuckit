@@ -135,7 +135,6 @@ void myGlutDisplay(void)
 	glRotatef(rotationX, 1.0, 0.0, 0.0);
 
 	drawSurface();
-
 	glDisable(GL_LIGHTING);  /* Disable lighting while we render text */
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
