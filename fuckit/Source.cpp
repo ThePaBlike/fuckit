@@ -157,32 +157,24 @@ void myGlutDisplay(void)
 
 void drawSurface()
 {
-	//// TODO отладка
-	int ln = surface->GetVertexLength();
-	int fln = surface->GetVertexes().capacity();
-	int iln = surface->GetIndexLength();
-	int ifln = surface->GetIndexes().capacity();
-
-	for (int i = 0; i < surface->GetIndexLength(); i+=4)
+	int i = 0;
+	int len = surface->GetIndexLength();
+	glBegin(GL_QUADS);
 	{
-		glBegin(GL_LINE_LOOP);
+		while (i < len)
 		{
-			glColor3f(0.5f, 0.5f, 0.5f);
-			for (int j = 0; j < 4; j++)
-			{
-				int in = surface->GetIndexes().at(i+j);
-				Vertex t = surface->GetVertexes().at(in);
-				glVertex3f(t.x, t.y, t.z);
-			}
+			int in = surface->GetIndexes().at(i++);
+			Vertex t = surface->GetVertexes().at(in);
+			glVertex3f(t.x, t.y, t.z);
 		}
-		glEnd();
 	}
+	glEnd();
 }
 
 int main(int argc, char* argv[])
 {
 	// Создаём элипсоид
-	surface = new Thor(0.5, 0.5, 0.5, 14, 14, Interval(-PI, PI), Interval(0, 2 * PI));
+	surface = new Ellipsoid(1, 1, 1, 30, 30, Interval(0, 2*PI), Interval(0, 2 * PI));
 
 
 	/****************************************/
@@ -246,6 +238,9 @@ int main(int argc, char* argv[])
 	/* We register the idle callback with GLUI, *not* with GLUT */
 	GLUI_Master.set_glutIdleFunc(myGlutIdle);
 	GLUI_Master.set_glutIdleFunc(NULL);
+
+	//
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	glutMainLoop();
 
