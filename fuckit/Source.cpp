@@ -7,6 +7,8 @@
 #include "glui.h"
 #include "toInclude.h"
 #include "math_3d.h"
+
+void Make();
 // Buffers
 GLuint VBO;
 GLuint IBO;
@@ -53,22 +55,21 @@ int   main_window;
 
 
 /** These are the live variables passed into GLUI ***/
-int   wireframe = 0;
-int   obj = 0;
-int   segments = 8;
-
-// Using a std::string as a live variable is safe.
-std::string text = "Hello World!";
-
+int   wireframe = 1;
+int   type_of_surf = 0, prev_tof = 0;
+int   segments_x = 16, segments_y = 16;
+int	  prev_seg_x = 16, prev_seg_y = 16;
+float _a = 1.0f, _b = 1.0f, _c = 1.0f;
+float prev_a = 1.0f, prev_b = 1.0f, prev_c = 1.0f;
 // Using a char buffer as a live var is also possible, but it is dangerous 
 // because GLUI doesn't know how big your buffer is.  
 // But still, it works as long as text doesn't happen to overflow.
 //char  text[200] = {"Hello World!"};
 
 GLUI_Checkbox   *checkbox;
-GLUI_Spinner    *spinner;
+GLUI_Spinner    *spinner_segments;
+GLUI_Spinner	*spinner_params;
 GLUI_RadioGroup *radio;
-GLUI_EditText   *edittext;
 GLUI_Rotation	*rotation;
 float matrix[16];
 /**************************************** control_cb() *******************/
@@ -86,10 +87,11 @@ void control_cb(int control)
 
 	printf("callback: %d\n", control);
 	printf("             checkbox: %d\n", checkbox->get_int_val());
-	printf("              spinner: %d\n", spinner->get_int_val());
+	printf("              spinner: %d\n", spinner_segments->get_int_val());
 	printf("          radio group: %d\n", radio->get_int_val());
-	printf("                 text: %s\n", edittext->get_text());
-
+	printf("          segm x t: %d\n", segments_x);
+	printf("          segm y s: %d\n", segments_y);
+	printf("          type of surf: %d\n", type_of_surf);
 }
 
 void myGlutIdle(void)
@@ -99,62 +101,16 @@ void myGlutIdle(void)
 	it if necessary */
 	if (glutGetWindow() != main_window)
 		glutSetWindow(main_window);
-
-	glutPostRedisplay();
+	
+	glutPostRedisplay();	
 }
-
-//void myGlutKeyboard(unsigned char Key, int x, int y)
-//{
-//	switch (Key)
-//	{
-//		// A few keys here to test the sync_live capability.
-//	case 'o':
-//		// Cycle through object types
-//		++obj %= 3;
-//		GLUI_Master.sync_live_all();
-//		break;
-//	case 'w':
-//		// Toggle wireframe mode
-//		wireframe = !wireframe;
-//		GLUI_Master.sync_live_all();
-//		break;
-//	case 27:
-//	case 'q':
-//		exit(0);
-//		break;
-//	};
-//	glutPostRedisplay();
-//}
-//
-//void myGlutMenu(int value)
-//{
-//	//myGlutKeyboard(value, 0, 0);
-//}
-
-//void myGlutMouse(int button, int button_state, int x, int y)
-//{
-//	if (button == GLUT_LEFT_BUTTON && button_state == GLUT_DOWN) {
-//		last_x = x;
-//		last_y = y;
-//	}
-//}
-//
-//void myGlutMotion(int x, int y)
-//{
-//	rotationX += (float)(y - last_y);
-//	rotationY += (float)(x - last_x);
-//
-//	last_x = x;
-//	last_y = y;
-//
-//	glutPostRedisplay();
-//}
 
 void myGlutReshape(int x, int y)
 {
 	xy_aspect = (float)x / (float)y;
 	glViewport(0, 0, x, y);
-
+	glDepthRange(-1000, 1000);
+	gluPerspective(45, xy_aspect, 0, 100);
 	glutPostRedisplay();
 }
 
@@ -180,11 +136,18 @@ void myGlutDisplay(void)
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
 
-	glDrawElements(GL_LINE_LOOP, surface->GetIndexLength(), GL_UNSIGNED_INT, 0);
+	glDrawElements(wireframe? GL_LINE_LOOP : GL_QUADS, surface->GetIndexLength(), GL_UNSIGNED_INT, 0);
 
 	glDisableVertexAttribArray(0);
 
 	glutSwapBuffers();
+
+	/*if (_a != prev_a || _b != prev_b || _c != prev_c ||
+		segments_x != prev_seg_x || segments_y != prev_seg_y ||
+		type_of_surf != prev_tof)
+	{
+		Make();
+	}*/
 }
 
 #pragma region Shaders
@@ -268,11 +231,43 @@ static void CreateIndexBuffer()
 }
 #pragma endregion
 
+void Make(int control)
+{
+	if (segments_x % 2 == 1)
+		segments_x++;
+	if (segments_y % 2 == 1)
+		segments_y++;
+	
+	switch (type_of_surf)
+	{
+	case 0: // Ellipsoid
+		surface = new Ellipsoid(_a, _b, _c, segments_x, segments_y, Interval(0, 2 * PI), Interval(0, 2 * PI));
+		break;
+	case 1:	// Cylinder
+		surface = new Cylinder(_a, _b, _c, segments_x, segments_y, Interval(-5, 5), Interval(0, 2 * PI));
+		break;
+	case 2:	// Cone
+		surface = new Cone(_a, _b, _c, segments_x, segments_y, Interval(-5, 5), Interval(0, 2 * PI));
+		break;
+	case 3:	// Thor
+
+		break;
+	case 4:
+
+		break;
+	}
+	
+
+
+	CreateVertexBuffer();
+	CreateIndexBuffer();
+	glutPostRedisplay();
+}
 
 int main(int argc, char* argv[])
 {
 	// Создаём элипсоид
-	surface = new Ellipsoid(1, 1, 1, 26, 26, Interval(0, 2*PI), Interval(0, 2 * PI));
+	surface = new Ellipsoid(_a, _b, _c, segments_x, segments_y, Interval(0, 2*PI), Interval(0, 2 * PI));
 
 
 	/****************************************/
@@ -287,6 +282,7 @@ int main(int argc, char* argv[])
 	main_window = glutCreateWindow("Surface Viewer");
 	glutDisplayFunc(myGlutDisplay);
 	glutReshapeFunc(myGlutReshape);
+	glutIdleFunc(myGlutIdle);
 
 	/****************************************/
 	/*       Set up OpenGL lights           */
@@ -301,7 +297,7 @@ int main(int argc, char* argv[])
 	glLightfv(GL_LIGHT0, GL_AMBIENT, light0_ambient);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_diffuse);
 	glLightfv(GL_LIGHT0, GL_POSITION, light0_position);
-
+	glLightModelf(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
 	/****************************************/
 	/*          Enable z-buferring          */
 	/****************************************/
@@ -315,21 +311,26 @@ int main(int argc, char* argv[])
 	GLUI *glui = GLUI_Master.create_glui("GLUI", 0, 850, 50); /* name, flags,
 															  x, and y */
 	new GLUI_StaticText(glui, "Control Panel");
-	new GLUI_Separator(glui);
-	checkbox = new GLUI_Checkbox(glui, "Wireframe", &wireframe, 1, control_cb);
-	
-	spinner = new GLUI_Spinner(glui, "Segments:", &segments, 2, control_cb);
-	spinner->set_int_limits(3, 60);
-	edittext = new GLUI_EditText(glui, "Text:", text, 3, control_cb);
-	GLUI_Panel *obj_panel = new GLUI_Panel(glui, "Object Type");
-	radio = new GLUI_RadioGroup(obj_panel, &obj, 4, control_cb);
-	new GLUI_RadioButton(radio, "Sphere");
-	new GLUI_RadioButton(radio, "Torus");
-	new GLUI_RadioButton(radio, "Teapot");
-	new GLUI_RadioButton(radio, "Hyperboloid");
-	new GLUI_Button(glui, "Quit", 0, (GLUI_Update_CB)exit);
-	rotation = new GLUI_Rotation(glui, "Rotation", matrix, 5, control_cb);
+	new GLUI_Separator(glui);	//------------------------------
+	checkbox = new GLUI_Checkbox(glui, "Wireframe", &wireframe, 1, Make);
+	GLUI_Panel *obj_panel = new GLUI_Panel(glui, "Surface Type");
+	radio = new GLUI_RadioGroup(obj_panel, &type_of_surf, 2, Make);
+	new GLUI_RadioButton(radio, "Ellipsoid");
+	new GLUI_RadioButton(radio, "Cylinder");
+	new GLUI_RadioButton(radio, "Cone");
+	new GLUI_RadioButton(radio, "Thor");
+	new GLUI_Separator(glui);	//------------------------------	
+	spinner_params = new GLUI_Spinner(glui, "a:", &_a, 3, Make);
+	spinner_params = new GLUI_Spinner(glui, "b:", &_b, 4, Make);
+	spinner_params = new GLUI_Spinner(glui, "c:", &_c, 5, Make);
+	new GLUI_Separator(glui);	//------------------------------
+	spinner_segments = new GLUI_Spinner(glui, "Segments X:", &segments_x, 6, Make);
+	spinner_segments = new GLUI_Spinner(glui, "Segments Y:", &segments_y, 7, Make);
+
+	rotation = new GLUI_Rotation(glui, "Rotation", matrix, 8, control_cb);
 	rotation->reset();
+
+	new GLUI_Button(glui, "Animate", 0, (GLUI_Update_CB)exit);
 	glui->set_main_gfx_window(main_window);
 
 	/* We register the idle callback with GLUI, *not* with GLUT */
