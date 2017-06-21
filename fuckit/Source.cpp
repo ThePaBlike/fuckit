@@ -150,28 +150,12 @@ void myGlutIdle(void)
 //	glutPostRedisplay();
 //}
 
-void myGlutReshape(int w, int h)
+void myGlutReshape(int x, int y)
 {
-	// предупредим деление на ноль
-	// если окно сильно перетянуто будет
-	if (h == 0)
-		h = 1;
-	float ratio = 1.0* w / h;
+	xy_aspect = (float)x / (float)y;
+	glViewport(0, 0, x, y);
 
-	// используем матрицу проекции
-	glMatrixMode(GL_PROJECTION);
-
-	// Reset матрицы
-	glLoadIdentity();
-
-	// определяем окно просмотра
-	glViewport(0, 0, w, h);
-
-	// установить корректную перспективу.
-	gluPerspective(45, ratio, 1, 1000);
-
-	// вернуться к модели
-	glMatrixMode(GL_MODELVIEW);
+	glutPostRedisplay();
 }
 
 void myGlutDisplay(void)
@@ -199,8 +183,6 @@ void myGlutDisplay(void)
 	glDrawElements(GL_LINE_LOOP, surface->GetIndexLength(), GL_UNSIGNED_INT, 0);
 
 	glDisableVertexAttribArray(0);
-
-	
 
 	glutSwapBuffers();
 }
@@ -332,7 +314,7 @@ int main(int argc, char* argv[])
 
 	GLUI *glui = GLUI_Master.create_glui("GLUI", 0, 850, 50); /* name, flags,
 															  x, and y */
-	new GLUI_StaticText(glui, "GLUI Example 2");
+	new GLUI_StaticText(glui, "Control Panel");
 	new GLUI_Separator(glui);
 	checkbox = new GLUI_Checkbox(glui, "Wireframe", &wireframe, 1, control_cb);
 	
