@@ -58,9 +58,7 @@
 //int   wireframe = 1;
 //int   type_of_surf = 0, prev_tof = 0;
 //int   segments_x = 16, segments_y = 16;
-//int	  prev_seg_x = 16, prev_seg_y = 16;
 //float _a = 1.0f, _b = 1.0f, _c = 1.0f;
-//float prev_a = 1.0f, prev_b = 1.0f, prev_c = 1.0f;
 //// Using a char buffer as a live var is also possible, but it is dangerous 
 //// because GLUI doesn't know how big your buffer is.  
 //// But still, it works as long as text doesn't happen to overflow.
@@ -257,8 +255,6 @@
 //		break;
 //	}
 //	
-//
-//
 //	CreateVertexBuffer();
 //	CreateIndexBuffer();
 //	glutPostRedisplay();

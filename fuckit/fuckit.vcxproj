@@ -114,7 +114,12 @@
     <ClCompile Include="cone.cpp" />
     <ClCompile Include="cylinder.cpp" />
     <ClCompile Include="ellipsoid.cpp" />
+    <ClCompile Include="elliptic_paraboloid.cpp" />
+    <ClCompile Include="hyperbolic_paraboloid.cpp" />
+    <ClCompile Include="hyperboloid_of_one_sheet.cpp" />
+    <ClCompile Include="hyper_cylinder.cpp" />
     <ClCompile Include="math_3d.cpp" />
+    <ClCompile Include="parabolic_cylinder.cpp" />
     <ClCompile Include="rotation_test.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="surface.cpp" />
@@ -128,8 +133,13 @@
     <ClInclude Include="cone.h" />
     <ClInclude Include="cylinder.h" />
     <ClInclude Include="ellipsoid.h" />
+    <ClInclude Include="elliptic_paraboloid.h" />
     <ClInclude Include="glui.h" />
+    <ClInclude Include="hyperbolic_paraboloid.h" />
+    <ClInclude Include="hyperboloid_of_one_sheet.h" />
+    <ClInclude Include="hyper_cylinder.h" />
     <ClInclude Include="math_3d.h" />
+    <ClInclude Include="parabolic_cylinder.h" />
     <ClInclude Include="surface.h" />
     <ClInclude Include="thor.h" />
     <ClInclude Include="toInclude.h" />
